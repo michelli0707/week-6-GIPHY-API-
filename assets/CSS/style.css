@@ -1,0 +1,34 @@
+html {
+    position: relative;
+    height: 100%;
+    width: 960px;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 50px;
+  }
+  
+  body {
+	background-color: #ffffff;
+    font-family: "Arial", "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 15px;
+    color: black;
+  }
+
+  .jumbotron h1 {
+    text-shadow: 3px 3px #fff;
+  
+  }
+
+  #anime-form {
+    float: right;
+    padding: 25px;
+    text-decoration: none;
+  }
+
+  #gifs-appear-here {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 31.33%;
+  }
+
+  
