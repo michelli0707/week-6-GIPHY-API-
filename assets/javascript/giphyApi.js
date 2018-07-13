@@ -1,94 +1,89 @@
-$("button").on("click", function() {
-    // Grabbing and storing the data-animal property value from the button
-    var animal = $(this).attr("data-animal");
+$(document).ready(function() {
 
-    // Constructing a queryURL using the animal name
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-      animal + "&api_key=dc6zaTOxFJmzC&limit=10";
+  var animals = [
+    "bird", "cat", "chinchilla", "chicken", "dog", "frog", "goldfish", "hamster", "pygmy goat", 
+    "rabbit", "salamander", "skunk", "teacup pig", "turtle" 
+  ];
 
-    // Performing an AJAX request with the queryURL
+  // function to make buttons and add to page
+  function populateButtons(arrayToUse, classToAdd, areaToAddTo) {
+    $(areaToAddTo).empty();
+
+    for (var i = 0; i < arrayToUse.length; i++) {
+      var a = $("<button>");
+      a.addClass(classToAdd);
+      a.attr("data-type", arrayToUse[i]);
+      a.text(arrayToUse[i]);
+      $(areaToAddTo).append(a);
+    }
+
+  }
+
+  $(document).on("click", ".animal-button", function() {
+    $("#animals").empty();
+    $(".animal-button").removeClass("active");
+    $(this).addClass("active");
+
+    var type = $(this).attr("data-type");
+    var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + type + "&api_key=dc6zaTOxFJmzC&limit=10";
+
     $.ajax({
       url: queryURL,
       method: "GET"
     })
-      // After data comes back from the request
       .then(function(response) {
-        console.log(queryURL);
-
-        console.log(response);
-        // storing the data from the AJAX request in the results variable
         var results = response.data;
 
-        // Looping through each result item
         for (var i = 0; i < results.length; i++) {
+          var animalDiv = $("<div class=\"animal-item\">");
 
-          // Creating and storing a div tag
-          var animalDiv = $("<div>");
+          var rating = results[i].rating;
 
-          // Creating a paragraph tag with the result item's rating
-          var p = $("<p>").text("Rating: " + results[i].rating);
+          var p = $("<p>").text("Rating: " + rating);
 
-          // Creating and storing an image tag
+          var animated = results[i].images.fixed_height.url;
+          var still = results[i].images.fixed_height_still.url;
+
           var animalImage = $("<img>");
-          // Setting the src attribute of the image to a property pulled off the result item
-          animalImage.attr("src", results[i].images.fixed_height.url);
+          animalImage.attr("src", still);
+          animalImage.attr("data-still", still);
+          animalImage.attr("data-animate", animated);
+          animalImage.attr("data-state", "still");
+          animalImage.addClass("animal-image");
 
-          // Appending the paragraph and image tag to the animalDiv
           animalDiv.append(p);
           animalDiv.append(animalImage);
 
-          // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
-          $("#gifs-appear-here").prepend(animalDiv);
+          $("#animals").append(animalDiv);
         }
       });
+  });
 
-    // Function for displaying anime data
-    function renderButtons() {
+  $(document).on("click", ".animal-image", function() {
 
-      // Deletes the movies prior to adding new movies
-      // (this is necessary otherwise you will have repeat buttons)
-      $("#animebuttons").empty();
+    var state = $(this).attr("data-state");
 
-      for(var i = 0; i < animes.length; i++) {
+    if (state === "still") {
+      $(this).attr("src", $(this).attr("data-animate"));
+      $(this).attr("data-state", "animate");
+    }
+    else {
+      $(this).attr("src", $(this).attr("data-still"));
+      $(this).attr("data-state", "still");
+    }
+  });
 
-        // Then dynamicaly generates buttons for each movie in the array
-        // This code $("<button>") is all jQuery needs to create the beginning and end tag. (<button></button>)
-        var animeAdd = $("<button>");
+  $("#add-animal").on("click", function(event) {
+    event.preventDefault();
+    var newAnimal = $("input").eq(0).val();
 
-        // Adds a class of anime to our button
-        animeAdd.addClass("anime");
-
-        // Added a data-attribute
-        animeAdd.attr("data-name", animes[i]);
-
-        // Provided the initial button text
-        animeAdd.text(animes[i]);
-
-        var rating = $(".Rating").text("Rating: " + response.Rating);
-        var img = $("<img>").attr("src", response.embed-url);
-
-        // Added the button to the buttons-view div
-        $("#gifs-appear-here").append(img);
-      }
+    if (newAnimal.length > 2) {
+      animals.push(newAnimal);
     }
 
-    // This function handles events where the add anime button is clicked
-    $("#add-anime").on("click", function(event){
-      event.preventDefault();
+    populateButtons(animals, "animal-button", "#animal-buttons");
 
-      // This line of code will grab the input from the textbox
-      var anime = $("#anime-input").val().trim();
+  });
 
-      // The anime from the textbox is then added to our array
-      animes.push(anime);
-
-      // Calling renderButtons which handles the processing of our anime array
-      renderButtons();
-    });
-
-    // Adding click event listeners to all elements with a class of "anime"
-    $(document).on("click", ".anime", displayAnimeShow);
-
-    // Calling the renderButtons function to display the intial buttons
-    renderButtons();
+  populateButtons(animals, "animal-button", "#animal-buttons");
 });

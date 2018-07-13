@@ -8,24 +8,24 @@ html {
   }
   
   body {
-	background-color: aquamarine;
+	background-image: url("../images/landscape-nature.jpg");
     font-family: "Arial", "Helvetica Neue", Helvetica, sans-serif;
     font-size: 15px;
     color: black;
   }
 
-  .jumbotron h1 {
-    text-shadow: 3px 3px #fff;
-  
+  h1 {
+    color: black;
+    text-align: center;
   }
 
-  #anime-form {
+  #animal-form {
     float: right;
     padding-left: 25px;
     text-decoration: none;
   }
 
-  #gifs-appear-here {
+  #animals {
     display: inline-block;
     box-sizing: border-box;
     width: 31.33%;
